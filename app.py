@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import pymongo
 from datetime import datetime
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -44,6 +45,13 @@ def handle_webhook():
     # Insert event data into MongoDB
     collection.insert_one(event_data)
     return jsonify({"message": "Webhook received!"}), 200
+@app.route('/')
+def index():
+    return render_template('index.html')
 
+@app.route('/api/events')
+def get_events():
+    events = list(collection.find({}, {'_id': False}))  # Get all events from MongoDB
+    return jsonify(events)
 if __name__ == '__main__':
     app.run(debug=True)

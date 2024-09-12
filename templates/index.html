@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Events</title>
+    <script>
+      function fetchData() {
+        fetch("/api/events")
+          .then((response) => response.json())
+          .then((data) => {
+            const eventList = document.getElementById("events");
+            eventList.innerHTML = "";
+            data.forEach((event) => {
+              const listItem = document.createElement("li");
+              listItem.textContent = `${event.author} ${event.action} to ${event.to_branch} on ${event.timestamp}`;
+              eventList.appendChild(listItem);
+            });
+          });
+      }
+
+      setInterval(fetchData, 15000); // Fetch data every 15 seconds
+      window.onload = fetchData; // Fetch data on page load
+    </script>
+  </head>
+  <body>
+    <h1>Recent GitHub Events</h1>
+    <ul id="events"></ul>
+  </body>
+</html>
